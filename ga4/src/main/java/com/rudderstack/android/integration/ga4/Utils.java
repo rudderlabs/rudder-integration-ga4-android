@@ -89,10 +89,10 @@ public class Utils {
 
     static Map<String, String> transformUserTraits(Map<String, Object> userTraits) {
         Map<String, String> transformedUserTraits = new HashMap<>();
-        for (String key : userTraits.keySet()) {
-            String value = getString(userTraits.get(key));
+        for (Map.Entry<String, Object> userTrait : userTraits.entrySet()) {
+            String value = getString(userTrait.getValue());
             if (value != null) {
-                transformedUserTraits.put(key, value);
+                transformedUserTraits.put(userTrait.getKey(), value);
             }
         }
         return transformedUserTraits;
@@ -119,13 +119,13 @@ public class Utils {
             case "Double":
             case "Boolean":
             case "Character":
-            case "ArrayList":
-            case "HashMap":
                 return object.toString();
             case "String":
                 return (String) object;
+            case "HashMap":
             case "LinkedTreeMap":
-                return getStringFromLinkedTreeMap((LinkedTreeMap<String, Object>) object);
+                return new Gson().toJson(getStringFromMap((Map<String, Object>) object));
+            case "ArrayList":
             case "Array":
                 return new Gson().toJson(object);
             default:
@@ -205,20 +205,20 @@ public class Utils {
         }
         return 0;
     }
-
-    static String getStringFromLinkedTreeMap(LinkedTreeMap<String, Object> linkedTreeMap) {
-        if (linkedTreeMap.containsKey("values")) {
-            ArrayList<Object> arrayList = new ArrayList<>();
-            ArrayList<LinkedTreeMap> tempArrayList = (ArrayList<LinkedTreeMap>) linkedTreeMap.get("values");
-            for (LinkedTreeMap ltMap : tempArrayList) {
-                arrayList.add(ltMap.get("nameValuePairs"));
+    private static final String NAME_VALUE_PAIRS_IDENTIFIER = "nameValuePairs";
+    static String getStringFromMap(Map<String, Object> map) {
+        if (map.containsKey("values")) {
+            List<Object> arrayList = new ArrayList<>();
+            List<Map> tempList = (List<Map>) map.get("values");
+            for (Map ltMap : tempList) {
+                arrayList.add(ltMap.get(NAME_VALUE_PAIRS_IDENTIFIER));
             }
             return arrayList.toString();
         }
-        if (linkedTreeMap.containsKey("nameValuePairs")) {
-            return linkedTreeMap.get("nameValuePairs").toString();
+        if (map.containsKey(NAME_VALUE_PAIRS_IDENTIFIER)) {
+            return map.get(NAME_VALUE_PAIRS_IDENTIFIER).toString();
         }
-        return linkedTreeMap.toString();
+        return map.toString();
     }
 
     public static boolean isEmpty(Object value) {
