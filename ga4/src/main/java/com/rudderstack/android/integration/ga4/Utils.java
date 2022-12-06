@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,10 +123,9 @@ public class Utils {
                 return object.toString();
             case "String":
                 return (String) object;
-            case "HashMap":
-            case "LinkedTreeMap":
+            case "Map":
                 return new Gson().toJson(getStringFromMap((Map<String, Object>) object));
-            case "ArrayList":
+            case "Collection":
             case "Array":
                 return new Gson().toJson(object);
             default:
@@ -137,6 +137,10 @@ public class Utils {
         if (object.getClass().isArray()) {
             return "Array";
         }
+        if (object instanceof Collection)
+            return "Collection";
+        if(object instanceof Map)
+            return "Map";
         return object.getClass().getSimpleName();
     }
 

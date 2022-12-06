@@ -6,9 +6,12 @@ import static org.hamcrest.Matchers.is;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class UtilsTest {
     private static final Map TEST_MAP = new HashMap<String, Object>();
@@ -29,6 +32,19 @@ public class UtilsTest {
     @Test
     public void getType() {
         System.out.println("Type is: " + TEST_MAP.getClass().getSimpleName());
-        assertThat(Utils.getType(TEST_MAP), is("HashMap"));
+        assertThat(Utils.getType(TEST_MAP), is("Map"));
+
+        Object treeMap = new TreeMap<String, Object>();
+        assertThat(Utils.getType(treeMap), is("Map"));
+
+        Object set = new HashSet<Object>();
+        assertThat(Utils.getType(set), is("Collection"));
+
+        Object arrayList = new ArrayList<Object>();
+        assertThat(Utils.getType(arrayList), is("Collection"));
+
+        Object[] array = new Object[1];
+        assertThat(Utils.getType(array), is("Array"));
+
     }
 }
