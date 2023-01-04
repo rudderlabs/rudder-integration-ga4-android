@@ -33,6 +33,8 @@ dependencies {
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-analytics'
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.hamcrest:hamcrest:2.2"
 }
 
 ext {
