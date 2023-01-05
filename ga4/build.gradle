@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0.0"
+        buildConfigField("String", "VERSION_NAME", "\"${VERSION_NAME}\"")
+
     }
 
     buildTypes {
@@ -41,11 +41,6 @@ dependencies {
     testImplementation "org.hamcrest:hamcrest:2.2"
 }
 
-ext {
-    PUBLISH_GROUP_ID = 'com.rudderstack.android.integration'
-    PUBLISH_VERSION = '1.0.0'
-    PUBLISH_ARTIFACT_ID = 'ga4'
-}
 
 apply from: rootProject.file('gradle/mvn-publish.gradle')
 apply from: rootProject.file('gradle/codecov.gradle')
