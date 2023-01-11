@@ -37,7 +37,7 @@ jobs:
           current_version=$(cat gradle.properties | grep "VERSION_NAME" | cut -d'=' -f2)
           
           npm ci
-          npx standard-version --skip.commit --skip.tag --skip.changelog
+          npx standard-version --skip.commit --skip.tag --skip.changelog --release-as 1.0.0
           new_version=$(cat gradle.properties | grep "VERSION_NAME" | cut -d'=' -f2)
           git reset --hard
 
@@ -59,7 +59,7 @@ jobs:
         id: finish-release
         run: |
           npm ci
-          npx standard-version -a --skip.tag
+          npx standard-version -a --skip.tag --release-as 1.0.0
 
       - name: Push new version in release branch
         
