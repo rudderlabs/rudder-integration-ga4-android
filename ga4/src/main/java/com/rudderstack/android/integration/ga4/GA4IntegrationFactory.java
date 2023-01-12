@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GA4IntegrationFactory extends RudderIntegration<FirebaseAnalytics> {
-    private static final String GA4_KEY = "GA4";
+    private static final String GA4_KEY = "Google Analytics 4";
     private static FirebaseAnalytics _firebaseAnalytics;
 
     public static Factory FACTORY = new Factory() {
