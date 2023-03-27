@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class UtilsTest {
-    private static final Map TEST_MAP = new HashMap<String, Object>();
+    private static final Map<String, Object> TEST_MAP = new HashMap<>();
 
     @Before
     public void init() {
-        Map data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         data.put("nameValuePairs", "value_string");
         TEST_MAP.put("values", Collections.singletonList(data));
 
@@ -26,22 +26,22 @@ public class UtilsTest {
 
     @Test
     public void getString() {
-        assertThat(Utils.getString(TEST_MAP), is("\"[value_string]\""));
+        assertThat(Utils.getString(TEST_MAP), is("{values=[{nameValuePairs=value_string}]}"));
     }
 
     @Test
     public void getType() {
         System.out.println("Type is: " + TEST_MAP.getClass().getSimpleName());
-        assertThat(Utils.getType(TEST_MAP), is("Map"));
+        assertThat(Utils.getType(TEST_MAP), is("HashMap"));
 
         Object treeMap = new TreeMap<String, Object>();
-        assertThat(Utils.getType(treeMap), is("Map"));
+        assertThat(Utils.getType(treeMap), is("TreeMap"));
 
-        Object set = new HashSet<Object>();
-        assertThat(Utils.getType(set), is("Collection"));
+        Object set = new HashSet<>();
+        assertThat(Utils.getType(set), is("HashSet"));
 
-        Object arrayList = new ArrayList<Object>();
-        assertThat(Utils.getType(arrayList), is("Collection"));
+        Object arrayList = new ArrayList<>();
+        assertThat(Utils.getType(arrayList), is("ArrayList"));
 
         Object[] array = new Object[1];
         assertThat(Utils.getType(array), is("Array"));
