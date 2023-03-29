@@ -1,8 +1,6 @@
 package com.rudderstack.android.integration.ga4;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.rudderstack.android.sdk.core.RudderLogger;
 import com.rudderstack.android.sdk.core.ecomm.ECommerceEvents;
 import com.rudderstack.android.sdk.core.ecomm.ECommerceParamNames;
@@ -10,9 +8,7 @@ import com.rudderstack.android.sdk.core.ecomm.ECommerceParamNames;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +45,10 @@ public class Utils {
             put(ECommerceEvents.CART_VIEWED, FirebaseAnalytics.Event.VIEW_CART);
         }
     };
+
+    static String getECommerceEventMapping(String eventName) {
+        return ECOMMERCE_EVENTS_MAPPING.get(eventName);
+    }
 
     static final List<String> EVENT_WITH_PRODUCTS_ARRAY = Arrays.asList(
             FirebaseAnalytics.Event.BEGIN_CHECKOUT,
@@ -90,10 +90,10 @@ public class Utils {
 
     static Map<String, String> transformUserTraits(Map<String, Object> userTraits) {
         Map<String, String> transformedUserTraits = new HashMap<>();
-        for (Map.Entry<String, Object> userTrait : userTraits.entrySet()) {
-            String value = getString(userTrait.getValue());
+        for (String key : userTraits.keySet()) {
+            String value = getString(userTraits.get(key));
             if (value != null) {
-                transformedUserTraits.put(userTrait.getKey(), value);
+                transformedUserTraits.put(key, value);
             }
         }
         return transformedUserTraits;
@@ -120,27 +120,38 @@ public class Utils {
             case "Double":
             case "Boolean":
             case "Character":
+            case "ArrayList":
                 return object.toString();
             case "String":
                 return (String) object;
-            case "Map":
-                return new Gson().toJson(getStringFromMap((Map<String, Object>) object));
-            case "Collection":
-            case "Array":
-                return new Gson().toJson(object);
+            case "HashMap":
+            case "LinkedHashMap":
+                return mapToString((Map<?, ?>) object);
             default:
                 return null;
         }
+    }
+
+    public static String mapToString(Map<?, ?> map) {
+        StringBuilder mapToString = new StringBuilder();
+        mapToString.append("{");
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            mapToString.append(entry.getKey().toString())
+                    .append("=")
+                    .append(entry.getValue().toString())
+                    .append(", ");
+        }
+        if (map.size() > 0) {
+            mapToString.setLength(mapToString.length() - 2);
+        }
+        mapToString.append("}");
+        return mapToString.toString();
     }
 
     static String getType(Object object) {
         if (object.getClass().isArray()) {
             return "Array";
         }
-        if (object instanceof Collection)
-            return "Collection";
-        if(object instanceof Map)
-            return "Map";
         return object.getClass().getSimpleName();
     }
 
@@ -208,21 +219,6 @@ public class Utils {
             }
         }
         return 0;
-    }
-    private static final String NAME_VALUE_PAIRS_IDENTIFIER = "nameValuePairs";
-    static String getStringFromMap(Map<String, Object> map) {
-        if (map.containsKey("values")) {
-            List<Object> arrayList = new ArrayList<>();
-            List<Map> tempList = (List<Map>) map.get("values");
-            for (Map ltMap : tempList) {
-                arrayList.add(ltMap.get(NAME_VALUE_PAIRS_IDENTIFIER));
-            }
-            return arrayList.toString();
-        }
-        if (map.containsKey(NAME_VALUE_PAIRS_IDENTIFIER)) {
-            return map.get(NAME_VALUE_PAIRS_IDENTIFIER).toString();
-        }
-        return map.toString();
     }
 
     public static boolean isEmpty(Object value) {
