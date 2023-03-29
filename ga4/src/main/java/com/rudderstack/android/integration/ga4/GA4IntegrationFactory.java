@@ -201,8 +201,6 @@ public class GA4IntegrationFactory extends RudderIntegration<FirebaseAnalytics> 
         // order_id is being mapped to FirebaseAnalytics.Param.TRANSACTION_ID.∂
         if (properties.containsKey("order_id") && !Utils.isEmpty(properties.get("order_id"))) {
             params.putString(FirebaseAnalytics.Param.TRANSACTION_ID, Utils.getString(properties.get("order_id")));
-            // As this change is made at version 2.0.2. So to have the backward compatibility, we're inserting order_id properties as well.
-            params.putString("order_id", Utils.getString(properties.get("order_id")));
         }
     }
 

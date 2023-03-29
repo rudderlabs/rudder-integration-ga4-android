@@ -15,9 +15,9 @@ class MainApplication : Application() {
         super.onCreate()
         rudderClient = RudderClient.getInstance(
             this,
-            "1xAkuGRTPWQDOB70k9H5O9Vy2Jj",
+            "<WRITE_KEY>",
             RudderConfig.Builder()
-                .withDataPlaneUrl("https://1327-103-77-46-123.ngrok.io")
+                .withDataPlaneUrl("<DATA_PLANE_URL>")
                 .withControlPlaneUrl("https://1327-103-77-46-123.ngrok.io")
                 .withRecordScreenViews(false)
                 .withTrackLifecycleEvents(false)
