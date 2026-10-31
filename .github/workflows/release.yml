@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
   release:
     types: [ created ]
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   release:
+    permissions:
+      contents: read # actions/checkout
     runs-on: ubuntu-latest
     environment: deployment
     steps:
@@ -19,6 +20,8 @@ jobs:
 
       - name: Checkout source branch
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        with:
+          persist-credentials: false
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
